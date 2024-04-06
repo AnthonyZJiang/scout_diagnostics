@@ -1,0 +1,9 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~include_velocity_state" : \b [bool] Include velocity states in diagnostics updater. min: False, default: True, max: True
+- \b "~include_motor_driver_state" : \b [bool] Include motor driver states in diagnostics updater. min: False, default: False, max: True
+- \b "~include_light_state" : \b [bool] Include light states in diagnostics updater. min: False, default: False, max: True
+- \b "~include_bms_state" : \b [bool] Include BMS states in diagnostics updater. min: False, default: False, max: True
+

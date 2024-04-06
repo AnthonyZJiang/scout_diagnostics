@@ -1,0 +1,10 @@
+\subsubsection usage Usage
+\verbatim
+<node name="scout_diagnostics_node" pkg="scout_diagnostics" type="scout_diagnostics_node">
+  <param name="include_velocity_state" type="bool" value="True" />
+  <param name="include_motor_driver_state" type="bool" value="False" />
+  <param name="include_light_state" type="bool" value="False" />
+  <param name="include_bms_state" type="bool" value="False" />
+</node>
+\endverbatim
+

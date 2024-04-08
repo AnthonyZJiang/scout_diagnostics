@@ -1,7 +1,7 @@
 #include "scout_diagnostics/scout_diagnostics.h"
 
 ScoutDiagnostics::ScoutDiagnostics(ros::NodeHandle nh, ros::NodeHandle priv_nh)
-    : diagnostics(nh, priv_nh, ros::this_node::getName()), dynamic_reconfigure_server(priv_nh)
+    : diagnostics(nh, priv_nh, ros::this_node::getName()), dynamic_reconfigure_server(priv_nh), node(nh)
 {
     diagnostics.setHardwareID("scout");
     diagnostics.add("status", this, &ScoutDiagnostics::updateDiagnostics);
@@ -141,7 +141,7 @@ void ScoutDiagnostics::reconfigCallback(scout_diagnostics::ScoutDiagnosticsConfi
         }
         else
         {
-            scout_bms_status_sub = nh.subscribe("BMS_status", 1, &ScoutDiagnostics::scoutBmsStatusCallback, this);
+            scout_bms_status_sub = node.subscribe("BMS_status", 1, &ScoutDiagnostics::scoutBmsStatusCallback, this);
         }
     }
     include_bms_states = config.include_bms_states;

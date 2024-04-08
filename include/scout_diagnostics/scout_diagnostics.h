@@ -19,6 +19,7 @@ public:
     ~ScoutDiagnostics();
 
 private:
+    ros::NodeHandle node;
     ros::Timer timer;
     ros::Subscriber scout_status_sub;
     ros::Subscriber scout_bms_status_sub;

@@ -4,13 +4,16 @@ ScoutDiagnostics::ScoutDiagnostics(ros::NodeHandle nh, ros::NodeHandle priv_nh)
     : diagnostics(nh, priv_nh, ros::this_node::getName()), dynamic_reconfigure_server(priv_nh)
 {
     diagnostics.setHardwareID("scout");
-    diagnostics.add("update_diagnostics", this, &ScoutDiagnostics::updateDiagnostics);
+    diagnostics.add("status", this, &ScoutDiagnostics::updateDiagnostics);
 
     dynamic_reconfigure::Server<scout_diagnostics::ScoutDiagnosticsConfig>::CallbackType cb = [this](auto& config, auto level){ reconfigCallback(config, level); };
     dynamic_reconfigure_server.setCallback(cb);
 
     scout_status_sub = nh.subscribe("scout_status", 1, &ScoutDiagnostics::scoutStatusCallback, this);
-    scout_bms_status_sub = nh.subscribe("scout_bms_status", 1, &ScoutDiagnostics::scoutBmsStatusCallback, this);
+    if (include_bms_states)
+    {
+        scout_bms_status_sub = nh.subscribe("BMS_status", 1, &ScoutDiagnostics::scoutBmsStatusCallback, this);
+    }
 
     timer = nh.createTimer(ros::Duration(.1), &ScoutDiagnostics::periodicUpdate, this);
     timer.start();
@@ -130,6 +133,17 @@ void ScoutDiagnostics::reconfigCallback(scout_diagnostics::ScoutDiagnosticsConfi
     include_velocity_states = config.include_velocity_states;
     include_motor_driver_states = config.include_motor_driver_states;
     include_light_states = config.include_light_states;
+    if (include_bms_states != config.include_bms_states)
+    {
+        if (include_bms_states)
+        {
+            scout_bms_status_sub.shutdown();
+        }
+        else
+        {
+            scout_bms_status_sub = nh.subscribe("BMS_status", 1, &ScoutDiagnostics::scoutBmsStatusCallback, this);
+        }
+    }
     include_bms_states = config.include_bms_states;
 }
 
